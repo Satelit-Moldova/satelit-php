@@ -47,7 +47,7 @@ Data: Satelit (satelit.md). Credits left: 293645
 
 - PHP 7.2 to 8.4 with `ext-json` (built in).
 - Either the `curl` extension (used when loaded), or `allow_url_fopen` with `openssl` (PHP's HTTP streams). Nothing else.
-- A Satelit API key for every route except the keyless ones (`sample()`, `products()`, `plans()`, `status()`, `stats()`, `movies()->board()`). Keys are made in the [console](https://developer.satelit.md/en/console/); plans are on the [pricing page](https://developer.satelit.md/en/pricing/). To look at the data before choosing a plan, use the keyless `/v1/sample` and the console.
+- A Satelit API key for every route except the keyless ones (`sample()`, `products()`, `plans()`, `status()`, `stats()`, `movies()->board()`). Keys are made in the [console](https://developer.satelit.md/en/console/). Plans are on the [pricing page](https://developer.satelit.md/en/pricing/). To look at the data before choosing a plan, use the keyless `/v1/sample` and the console.
 
 ## Install
 
@@ -100,7 +100,7 @@ $satelit = new Satelit\Client($apiKey, [
 $ru = $satelit->withLang('ru');  // a copy asking in Russian
 ```
 
-Keep the key on the server: in an environment variable, or a config file outside the web root. Never print it in a page or send it to the browser; for a browser widget, call your own PHP endpoint that uses this client. The SDK sends the key only in the `Authorization: Bearer` header and never puts it in an exception message.
+Keep the key on the server: in an environment variable, or a config file outside the web root. Never print it in a page or send it to the browser. For a browser widget, call your own PHP endpoint that uses this client. The SDK sends the key only in the `Authorization: Bearer` header and never puts it in an exception message.
 
 ## Usage
 
@@ -111,7 +111,7 @@ Every method returns a `Satelit\Result`:
 | `$r->data` | the answer, as arrays (`json_decode(..., true)`) |
 | `$r->meta` | `credits`, `updatedAt`, `sources` (name, url, license), `attribution`, `notice`, `page` (`page`, `per`, `total`, `pages`), `next`, `hasMore`, and `raw` with every field as sent; `attributionLines()` gives the lines to show |
 | `$r->rate` | `limit`, `remaining`, `reset` (requests a minute), `creditsCost`, `creditsLimit`, `creditsRemaining`, `creditsReset`, `retryAfter`; `null` when a header was not there |
-| `$r->cached`, `$r->stale` | from the cache; the API failed and this is the last good copy |
+| `$r->cached`, `$r->stale` | from the cache. The API failed and this is the last good copy |
 
 A `Result` also reads like its data: `$r[0]['code']`, `foreach ($r as $row)`, `count($r)`.
 
@@ -229,7 +229,7 @@ Give the client a cache and it keeps each 2xx answer as long as its source chang
 | `/delivery`, `/insurance`, `/geo`, `/catalog` | 24 h |
 | `/me`, `/feed`, `/export` | never |
 
-Included: `FileCache` (one small JSON file per entry, atomic writes, for hosting without APCu or Redis; put its folder outside the web root) and `ArrayCache` (one process). `Satelit\Cache\CacheInterface` is the part of PSR-16 the client uses, so any PSR-16 cache works as it is (Symfony Cache, Laravel's `Cache::store()`, ...). Keys look like `satelit_<sha1>` and include a hash of the API key, the path, the query and the language. A cache that throws is ignored: the call still goes to the API.
+Included: `FileCache` (one small JSON file per entry, atomic writes, for hosting without APCu or Redis, put its folder outside the web root) and `ArrayCache` (one process). `Satelit\Cache\CacheInterface` is the part of PSR-16 the client uses, so any PSR-16 cache works as it is (Symfony Cache, Laravel's `Cache::store()`, ...). Keys look like `satelit_<sha1>` and include a hash of the API key, the path, the query and the language. A cache that throws is ignored: the call still goes to the API.
 
 With a cache the client also keeps a last good copy (a day, or 24 TTLs). When the API cannot be reached, answers 5xx or 429 `rate_limited`, that copy is returned with `$r->stale === true`, so a page keeps showing data. A wrong key, a missing plan or a wrong parameter is never hidden this way. `'stale_if_error' => false` turns it off.
 
@@ -243,7 +243,7 @@ $ php examples/cinema-today.php
 
 ## Pagination, feed and export
 
-`each...()` and `paginate()` are generators that fetch page after page (each page costs its credits); shop prices, deals, tours, rest places and companies stop at 5 pages, as the API does:
+`each...()` and `paginate()` are generators that fetch page after page (each page costs its credits). Shop prices, deals, tours, rest places and companies stop at 5 pages, as the API does:
 
 ```php
 foreach ($satelit->fuel()->eachStations(['network' => 'petrom']) as $station) {
@@ -252,7 +252,7 @@ foreach ($satelit->fuel()->eachStations(['network' => 'petrom']) as $station) {
 foreach ($satelit->paginate('/law/acts', ['important' => true], 3) as $act) { ... }   // at most 3 pages
 ```
 
-The change feed (Business and Enterprise plans) walks from a cursor; the generator's return value is the cursor to keep:
+The change feed (Business and Enterprise plans) walks from a cursor. The generator's return value is the cursor to keep:
 
 ```php
 $feed = $satelit->feed(['after' => $saved, 'types' => ['fuel.cap', 'rates.updated']]);
@@ -331,7 +331,7 @@ The offline suite (54 tests) reads the recorded live answers of all 53 sampled r
 
 ## Pe scurt (română)
 
-`satelit-php` este clientul PHP pentru API-ul de date Satelit: cursul BNM, carburanți, tarife, legislație, știri, prețuri din magazine, filme și altele. Merge pe PHP 7.2 până la 8.4, fără dependențe (curl sau, fără el, fluxurile HTTP ale PHP), cu Composer sau cu un singur `require 'src/autoload.php'` pe un hosting fără Composer. Cheia stă doar pe server ([consola](https://developer.satelit.md/en/console/)); planurile sunt pe [pagina de prețuri](https://developer.satelit.md/en/pricing/). Afișați `meta->attribution` lângă date și „Date: Satelit (satelit.md)”. Un apel Movies costă 40 de credite: dați clientului un cache (`FileCache`), care păstrează fiecare răspuns cât se schimbă sursa și, când API-ul nu răspunde, ultima copie bună. Erorile sunt `ApiException` cu o subclasă pe fiecare cod; se reîncearcă doar 429 `rate_limited` și 503 cu `Retry-After`, de cel mult 3 ori.
+`satelit-php` este clientul PHP pentru API-ul de date Satelit: cursul BNM, carburanți, tarife, legislație, știri, prețuri din magazine, filme și altele. Merge pe PHP 7.2 până la 8.4, fără dependențe (curl sau, fără el, fluxurile HTTP ale PHP), cu Composer sau cu un singur `require 'src/autoload.php'` pe un hosting fără Composer. Cheia stă doar pe server ([consola](https://developer.satelit.md/en/console/)). Planurile sunt pe [pagina de prețuri](https://developer.satelit.md/en/pricing/). Afișați `meta->attribution` lângă date și „Date: Satelit (satelit.md)”. Un apel Movies costă 40 de credite: dați clientului un cache (`FileCache`), care păstrează fiecare răspuns cât se schimbă sursa și, când API-ul nu răspunde, ultima copie bună. Erorile sunt `ApiException` cu o subclasă pe fiecare cod. Se reîncearcă doar 429 `rate_limited` și 503 cu `Retry-After`, de cel mult 3 ori.
 
 ## Links
 

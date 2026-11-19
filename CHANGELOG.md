@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0 — 2026-11-19
+## 1.0.0 (2026-11-19)
 
 - First release: a client for every route of the Satelit data API `/v1` (rates, fuel, tariffs, indexes, law, news and news events, places, geo, catalog, recipes, prices, deals, tours, flights, rest, estate, power, market, insurance, delivery, jokes, courts, citizenship, companies, movies, account).
 - PHP 7.2 to 8.4, no dependencies: curl, or PHP's HTTP streams when curl is missing. Composer (PSR-4) or a single `require 'src/autoload.php'`.
