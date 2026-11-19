@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Works with PHPUnit 8.5 (PHP 7.2, 7.3) and 9.6 (PHP 7.3 to 8.4). -->
+<phpunit bootstrap="tests/bootstrap.php" colors="true" beStrictAboutOutputDuringTests="true" failOnWarning="true">
+    <testsuites>
+        <testsuite name="offline">
+            <directory>tests/Unit</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

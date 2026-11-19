@@ -1,0 +1,39 @@
+{
+    "name": "satelit-moldova/satelit-php",
+    "description": "PHP client for the Satelit data API: Moldova's exchange rates, fuel, tariffs, law, news, shop prices, companies, movies and more. No dependencies, PHP 7.2 to 8.4.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["satelit", "moldova", "api", "sdk", "bnm", "exchange rates", "fuel prices", "open data"],
+    "homepage": "https://developer.satelit.md/en/docs/",
+    "support": {
+        "docs": "https://developer.satelit.md/en/docs/",
+        "source": "https://github.com/Satelit-Moldova/satelit-php",
+        "issues": "https://github.com/Satelit-Moldova/satelit-php/issues"
+    },
+    "require": {
+        "php": ">=7.2",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5.40 || ^9.6"
+    },
+    "suggest": {
+        "ext-curl": "Faster HTTP; without it the SDK uses PHP's HTTP streams (allow_url_fopen and ext-openssl)"
+    },
+    "autoload": {
+        "psr-4": {
+            "Satelit\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Satelit\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
